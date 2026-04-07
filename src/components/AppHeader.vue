@@ -1,38 +1,70 @@
 <template>
-  <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="/">VueJS with Flask</a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto">
-            <li class="nav-item">
-              <RouterLink to="/" class="nav-link active">Home</RouterLink>
-            </li>
-            <li class="nav-item">
-              <RouterLink class="nav-link" to="/about">About</RouterLink>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+  <header class="main-header" id="nav-bar">
+    <div class="wrapper" data-width="wide">
+      <!-- Logo (Home) -->
+      <RouterLink to="/" class="logo" id="logo-box">
+        <img src="@/assets/icons/m-logo.svg" alt="logo" />
+      </RouterLink>
+
+      <nav
+        class="main-navigation"
+        id="nav-container"
+        :class="{ active: menuOpen }"
+      >
+
+        <ul class="nav-list left" v-if="!$route.meta.hideAuthButtons">
+          <li>
+            <RouterLink to="/about" class="nav-link"> About </RouterLink>
+          </li>
+        </ul>
+
+
+        <ul class="nav-list right" v-if="!$route.meta.hideAuthButtons">
+          <li>
+            <RouterLink to="/login" class="nav-link log" data-cta-style="line">
+              Log In
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink to="/signup" class="nav-link sign">
+              Sign Up
+            </RouterLink>
+          </li>
+        </ul>
+    
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button @click="toggleMenu" class="mobile-navigation" id="menu-container">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </button>
+
+      <!-- Overlay -->
+      <div
+        class="black"
+        id="black-box"
+        @click="toggleMenu"
+        v-if="menuOpen"
+      ></div>
+    </div>
   </header>
 </template>
+
+<script>
+
+export default {
+  computed: {
+    isDashboard() {
+      return this.$route.name === "dashboard";
+    }
+  }
+};
+</script>
 
 <script setup>
 import { RouterLink } from "vue-router";
 </script>
 
-<style>
-/* Add any component specific styles here */
-</style>
+<style src="../assets/css/nav.css"></style>

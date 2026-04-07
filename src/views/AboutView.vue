@@ -1,9 +1,5 @@
 <template>
   <div class="about container">
-    <h2>About</h2>
-    <p>This is an about page.</p>
+    <h1>Under Construction</h1>
   </div>
 </template>
-
-<style>
-</style>
