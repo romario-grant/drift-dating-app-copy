@@ -1,7 +1,25 @@
 from flask import Flask
-from .config import Config
+from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+from flask_migrate import Migrate
+from flask_cors import CORS
+from app.config import Config
 
-app = Flask(__name__)
-app.config.from_object(Config)
+db = SQLAlchemy()
+bcrypt = Bcrypt()
+migrate = Migrate()
 
-from app import views
+
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
+
+    # 🔥 Enable CORS (VERY IMPORTANT for Vue frontend)
+    CORS(app, supports_credentials=True)
+
+    # Initialize extensions
+    db.init_app(app)
+    bcrypt.init_app(app)
+    migrate.init_app(app, db)
+
+    return app
