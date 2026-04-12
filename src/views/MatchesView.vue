@@ -1,36 +1,91 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { getMatches } from "../services/api";
+
+const matches = ref([]);
+const loading = ref(false);
+const errorMessage = ref("");
+
+const formatName = (name) => {
+  if (!name) return "Unknown";
+
+  return name
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
+
+const loadMatches = async () => {
+  loading.value = true;
+  errorMessage.value = "";
+
+  try {
+    const data = await getMatches();
+    matches.value = data;
+  } catch (error) {
+    errorMessage.value = error.message;
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  loadMatches();
+});
 </script>
 
 <template>
   <main class="dashboard">
-    <!-- Sidebar -->
     <aside class="sidebar">
       <nav>
-        <RouterLink to="/dashboard"> Browse </RouterLink>
-        <RouterLink to="/message"> Message </RouterLink>
-        <RouterLink to="/matches"> Matches </RouterLink>
+        <RouterLink to="/dashboard">Browse</RouterLink>
+        <RouterLink to="/matches">Matches</RouterLink>
       </nav>
     </aside>
 
     <div class="dash">
+      <h2>Your Matches</h2>
+
+      <p v-if="errorMessage" class="error-text">
+        {{ errorMessage }}
+      </p>
+      <p v-if="loading" class="loading-text">Loading matches...</p>
+
       <section class="section-team">
         <div class="wrapper">
           <div class="team">
-            <div class="lockup" v-for="n in 12" :key="n">
+            <div
+              class="profile-card"
+              v-for="match in matches"
+              :key="match.match_id"
+            >
               <figure class="img-box">
-                <img src="../assets/pics/default.webp" />
+                <img src="../assets/pics/default.webp" alt="profile picture" />
               </figure>
+
               <div class="info">
                 <div class="left">
-                  <h3>Person Name</h3>
-                  <p>person description and role</p>
-                  <p class="txt-p-clr">Match Score</p>
+                  <h3>
+                    {{ formatName(match.display_name) }}
+                    <span v-if="match.age">, {{ match.age }}</span>
+                  </h3>
+
+                  <p v-if="match.bio">{{ match.bio }}</p>
+                  <p v-if="match.location">{{ match.location }}</p>
                 </div>
 
-                <button class="reset-btn mess">Message</button>
+                <RouterLink
+                  :to="`/message/${match.user_id}`"
+                  class="reset-btn mess"
+                >
+                  Message
+                </RouterLink>
               </div>
             </div>
+
+            <p v-if="!loading && matches.length === 0" class="empty-text">
+              No matches yet.
+            </p>
           </div>
         </div>
       </section>
@@ -41,7 +96,8 @@ import { ref } from "vue";
 <style scoped>
 .dashboard {
   display: grid;
-  grid-template-columns: 0.5fr 4fr;
+  grid-template-columns: 0.6fr 4fr;
+  min-height: 100vh;
 }
 
 .dash {
@@ -50,13 +106,9 @@ import { ref } from "vue";
 
 .sidebar {
   padding: 2rem;
-  background: rgba(0, 102, 255, 0.15);
+  background: var(--secondary-color);
   backdrop-filter: blur(10px);
   border-right: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.logo {
-  margin-bottom: 2rem;
 }
 
 .sidebar nav {
@@ -67,102 +119,103 @@ import { ref } from "vue";
 
 .sidebar a {
   text-decoration: none;
-  color: #222;
+  color: #ffffff;
+  font-weight: 600;
 }
 
 h2 {
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
-.filters {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+.error-text {
+  color: red;
+  margin-top: 1rem;
+  text-align: center;
 }
 
-.filters input,
-.filters select {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.filters select {
-  max-width: 150px;
-}
-
-.fil {
-  display: flex;
-}
-
-.mess {
-    width: 20%;
-  background-color: var(--primary-color);
-}
-
-
-@media (max-width: 600px) {
-  .filters {
-    flex-direction: column;
-  }
-
-  .filters select {
-    max-width: 100%;
-  }
+.loading-text,
+.empty-text {
+  margin-top: 1rem;
+  text-align: center;
 }
 
 .team {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 340px));
+  justify-content: center;
   gap: 2rem;
+  margin-top: 2rem;
 }
 
-.team .info {
-  display: flex;
-  width: 100%;
-  gap: 2.4rem;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.team .info .left {
+.profile-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
+  align-items: center;
+  text-align: center;
   gap: 1.2rem;
 }
 
-.team .img-box {
+.img-box {
   display: flex;
   justify-content: center;
-  background-color: var(--primary-color);
-  border-radius: 15px;
-  width: max-content;
+  background-color: #f3f4f6;
+  border-radius: 20px;
+  width: 160px;
+  height: 160px;
+  overflow: hidden;
 }
 
-.team .img-box img {
+.img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
   width: 100%;
 }
 
-.team .lockup {
+.left {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
+  gap: 0.6rem;
 }
 
-.team .lockup p {
-  font-size: clamp(var(--fs-0), 5vw, var(--fs-1));
+.left h3,
+.left p {
+  margin: 0;
 }
 
-@media (width > 1028px) {
-  .mess:hover {
-    transform: translateY(-5px);
-    background-color: black;
+.mess {
+  width: max-content;
+  background-color: var(--primary-color);
+  text-decoration: none;
+}
+
+@media (max-width: 900px) {
+  .dashboard {
+    grid-template-columns: 1fr;
   }
-}
 
-.mess:active {
-  transform: translateY(5px);
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .sidebar nav {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
 }
 </style>

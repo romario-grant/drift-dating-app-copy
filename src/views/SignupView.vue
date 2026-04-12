@@ -1,59 +1,79 @@
-<script setup>
-import { ref } from "vue";
-</script>
-
 <template>
-  <section class="section-authentication">
-    <div class="authentication">
-      <div class="company">
-        <div class="wrapper">
-          <div class="lockup">
-           <h1>No pressure. No games. Just real connections.</h1>
-            <p>
-              By logging in to Drift Dating, you agree to our Terms of use and
-              Privacy Policy.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="form">
-        <div class="wrapper">
-          <div class="box">
-            <h2>Sign Up</h2>
+  <div class="form-container">
+    <h2>Sign Up</h2>
 
-            <div class="inputs">
-              <p>
-                <span style="color: red">*</span>Indicates a required field.
-              </p>
-              <div class="field">
-                <label>Phone Number <span style="color: red">*</span></label>
-                <input id="telephone" type="text" />
-              </div>
-              <div class="field">
-                <label>Email <span style="color: red">*</span></label>
-                <input id="email" type="email" />
-              </div>
+    <form @submit.prevent="handleSignup">
+      <input v-model="email" type="email" placeholder="Email" required />
+      <input
+        v-model="phone_number"
+        type="text"
+        placeholder="Phone Number"
+        required
+      />
+      <input
+        v-model="password"
+        type="password"
+        placeholder="Password"
+        required
+      />
 
-              <div class="field">
-                <label>Password <span style="color: red">*</span></label>
-                <input id="password" type="password" />
-              </div>
-            </div>
+      <button type="submit">Sign Up</button>
+    </form>
 
-            <div class="buttons">
-              <a id="signupBtn" class="cta">Sign Up</a>
-            </div>
-
-            <p class="sub-text">
-              <RouterLink to="/login" class="account">
-                Already have an account?
-              </RouterLink>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    <p v-if="error" class="error">{{ error }}</p>
+    <p v-if="success" class="success">{{ success }}</p>
+  </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      email: "",
+      phone_number: "",
+      password: "",
+      error: null,
+      success: null,
+    };
+  },
+  methods: {
+    async handleSignup() {
+      this.error = null;
+      this.success = null;
+
+      try {
+        const res = await fetch("http://localhost:5000/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            email: this.email,
+            phone_number: this.phone_number,
+            password: this.password,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          this.error = data.error || "Signup failed";
+          return;
+        }
+
+        this.success = "Account created successfully!";
+
+        setTimeout(() => {
+          this.$router.push("/login");
+        }, 1500);
+      } catch (err) {
+        this.error = "Server error. Try again.";
+        console.error(err);
+      }
+    },
+  },
+};
+</script>
 
 <style scoped src="../assets/css/form.css"></style>

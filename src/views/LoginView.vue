@@ -1,65 +1,64 @@
-<script setup>
-import { ref } from "vue";
-</script>
-
 <template>
-  <section class="section-authentication">
-    <div class="authentication">
-      <div class="company">
-        <div class="wrapper">
-          <div class="lockup">
-            <h1>No pressure. No games. Just real connections.</h1>
-            <p>
-              By logging in to Drift Dating, you agree to our Terms of use and
-              Privacy Policy.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="form">
-        <div class="wrapper">
-          <div class="box">
-            <h2>Log In</h2>
+  <div class="form-container">
+    <h2>Login</h2>
 
-            <div class="inputs">
-              <p>
-                <span style="color: red">*</span>Indicates a required field.
-              </p>
+    <form @submit.prevent="handleLogin">
+      <input v-model="email" type="email" placeholder="Email" required />
+      <input
+        v-model="password"
+        type="password"
+        placeholder="Password"
+        required
+      />
 
-              <div class="field">
-                <label>Email <span style="color: red">*</span></label>
-                <input id="email" type="email" />
-              </div>
+      <button type="submit">Login</button>
+    </form>
 
-              <div class="field">
-                <label>Password <span style="color: red">*</span></label>
-                <input id="password" type="password" />
-              </div>
-            </div>
-            <div class="buttons">
-              <RouterLink
-                to="/dashboard"
-                class="cta"
-                id="submitButton"
-              >
-                Log In
-              </RouterLink>
-            </div>
-
-            <p class="sub-text">
-              
-              <RouterLink
-                to="/signup"
-                class="account"
-              >
-                Need a Drift Dating account?
-              </RouterLink>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+    <p v-if="error" class="error">{{ error }}</p>
+  </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      email: "",
+      password: "",
+      error: null,
+    };
+  },
+  methods: {
+    async handleLogin() {
+      this.error = null;
+
+      try {
+        const res = await fetch("http://localhost:5000/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            email: this.email,
+            password: this.password,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          this.error = data.error || "Login failed";
+          return;
+        }
+
+        this.$router.push("/dashboard");
+      } catch (err) {
+        this.error = "Server error. Try again.";
+        console.error(err);
+      }
+    },
+  },
+};
+</script>
 
 <style scoped src="../assets/css/form.css"></style>

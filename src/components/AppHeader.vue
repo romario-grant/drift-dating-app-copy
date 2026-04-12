@@ -1,7 +1,6 @@
 <template>
   <header class="main-header" id="nav-bar">
     <div class="wrapper" data-width="wide">
-      <!-- Logo (Home) -->
       <RouterLink to="/" class="logo" id="logo-box">
         <img src="@/assets/icons/m-logo.svg" alt="logo" />
       </RouterLink>
@@ -11,13 +10,11 @@
         id="nav-container"
         :class="{ active: menuOpen }"
       >
-
         <ul class="nav-list left" v-if="!$route.meta.hideAuthButtons">
           <li>
-            <RouterLink to="/about" class="nav-link"> About </RouterLink>
+            <RouterLink to="/about" class="nav-link">About</RouterLink>
           </li>
         </ul>
-
 
         <ul class="nav-list right" v-if="!$route.meta.hideAuthButtons">
           <li>
@@ -31,17 +28,19 @@
             </RouterLink>
           </li>
         </ul>
-    
       </nav>
 
-      <!-- Mobile Menu Button -->
-      <button @click="toggleMenu" class="mobile-navigation" id="menu-container">
+      <button
+        @click="toggleMenu"
+        class="mobile-navigation"
+        id="menu-container"
+        type="button"
+      >
         <div class="bar"></div>
         <div class="bar"></div>
         <div class="bar"></div>
       </button>
 
-      <!-- Overlay -->
       <div
         class="black"
         id="black-box"
@@ -52,19 +51,15 @@
   </header>
 </template>
 
-<script>
-
-export default {
-  computed: {
-    isDashboard() {
-      return this.$route.name === "dashboard";
-    }
-  }
-};
-</script>
-
 <script setup>
+import { ref } from "vue";
 import { RouterLink } from "vue-router";
+
+const menuOpen = ref(false);
+
+const toggleMenu = () => {
+  menuOpen.value = !menuOpen.value;
+};
 </script>
 
 <style src="../assets/css/nav.css"></style>
