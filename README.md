@@ -36,5 +36,9 @@ Remember to always create a virtual environment and install the packages in your
 $ python -m venv venv (you may need to use python3 instead)
 $ source venv/bin/activate (or .\venv\Scripts\activate on Windows)
 $ pip install -r requirements.txt
-$ flask --app app --debug run
+$ python run.py
 ```
+
+The app uses `DATABASE_URL` when it is set. If it is not set, Flask falls back to a local SQLite database at `instance/app.db` for development.
+
+The frontend calls `http://localhost:5000` by default. To point it somewhere else, set `VITE_API_BASE_URL` in your `.env` file.

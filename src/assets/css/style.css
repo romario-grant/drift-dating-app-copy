@@ -183,9 +183,13 @@
   h4 {
     font-family: var(--ff-heading);
     color: var(--dark-heading-color);
-    &[data-color="white"] {
-      color: white;
-    }
+  }
+
+  h1[data-color="white"],
+  h2[data-color="white"],
+  h3[data-color="white"],
+  h4[data-color="white"] {
+    color: white;
   }
 
   a {
@@ -202,14 +206,14 @@
     padding-inline: 1rem;
 
     box-sizing: content-box;
+  }
 
-    &[data-width="narrow"] {
-      --wrapper-max-width: 720px;
-    }
+  .wrapper[data-width="narrow"] {
+    --wrapper-max-width: 720px;
+  }
 
-    &[data-width="wide"] {
-      --wrapper-max-width: 96%;
-    }
+  .wrapper[data-width="wide"] {
+    --wrapper-max-width: 96%;
   }
 
   section .wrapper {
@@ -244,9 +248,10 @@
     display: flex;
     flex-direction: column;
     gap: var(--lockup-padding);
-    &[data-gap="small"] {
-      gap: calc(var(--lockup-padding) / 2);
-    }
+  }
+
+  .lockup[data-gap="small"] {
+    gap: calc(var(--lockup-padding) / 2);
   }
 
   .lockup p {
