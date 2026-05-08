@@ -1,0 +1,52 @@
+@layer default {
+  .dashboard {
+    background-color: white;
+    min-height: 100vh;
+    padding-top: 3.2rem;
+  }
+
+  .dash {
+    padding: 2.4rem;
+    background-color: rgb(230, 230, 230);
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    min-height: 100vh;
+  }
+
+  .dash .container {
+    background-color: white;
+    padding: 2.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    border-radius: 25px;
+  }
+}
+
+@media (width > 1024px) {
+  .dashboard {
+    margin-left: 12rem;
+    background-color: white;
+    min-height: 100vh;
+    padding-top: 0rem;
+  }
+
+  .dash {
+    padding: 2.4rem;
+    background-color: rgb(230, 230, 230);
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    min-height: 100vh;
+  }
+
+  .dash .container {
+    background-color: white;
+    padding: 2.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    border-radius: 25px;
+  }
+}
