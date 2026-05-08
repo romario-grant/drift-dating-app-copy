@@ -107,12 +107,12 @@ def calculate_match_score(current_profile, other_profile):
     return min(score, 100)
 
 
-@app.route("/api", methods=["GET"])
-def api_index():
+@app.route("/", methods=["GET"])
+def index():
     return jsonify({"message": "Drift Dating API running"}), 200
 
 
-@app.route("/api/signup", methods=["POST"])
+@app.route("/signup", methods=["POST"])
 def signup():
     data = request.get_json()
 
@@ -158,7 +158,7 @@ def signup():
     }), 201
 
 
-@app.route("/api/login", methods=["POST"])
+@app.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
 
@@ -188,7 +188,7 @@ def login():
     }), 200
 
 
-@app.route("/api/me", methods=["GET"])
+@app.route("/me", methods=["GET"])
 def get_current_user():
     user_id = session.get("user_id")
 
@@ -207,7 +207,7 @@ def get_current_user():
     }), 200
 
 
-@app.route("/api/profile", methods=["GET"])
+@app.route("/profile", methods=["GET"])
 def get_profile():
     user_id = session.get("user_id")
 
@@ -237,7 +237,7 @@ def get_profile():
     }), 200
 
 
-@app.route("/api/profile", methods=["PUT"])
+@app.route("/profile", methods=["PUT"])
 def update_profile():
     user_id = session.get("user_id")
 
@@ -365,13 +365,13 @@ def update_profile():
     }), 200
 
 
-@app.route("/api/interests", methods=["GET"])
+@app.route("/interests", methods=["GET"])
 def get_interests():
     interests = Interest.query.order_by(Interest.name.asc()).all()
     return jsonify([serialize_interest(interest) for interest in interests]), 200
 
 
-@app.route("/api/profile/interests", methods=["PUT"])
+@app.route("/profile/interests", methods=["PUT"])
 def update_profile_interests():
     user_id = session.get("user_id")
 
@@ -410,7 +410,7 @@ def update_profile_interests():
     }), 200
 
 
-@app.route("/api/profiles", methods=["GET"])
+@app.route("/profiles", methods=["GET"])
 def get_profiles():
     user_id = session.get("user_id")
 
@@ -528,7 +528,7 @@ def get_profiles():
     return jsonify(results), 200
 
 
-@app.route("/api/like/<int:target_user_id>", methods=["POST"])
+@app.route("/like/<int:target_user_id>", methods=["POST"])
 def like_user(target_user_id):
     user_id = session.get("user_id")
 
@@ -605,7 +605,7 @@ def like_user(target_user_id):
     }), 200
 
 
-@app.route("/api/pass/<int:target_user_id>", methods=["POST"])
+@app.route("/pass/<int:target_user_id>", methods=["POST"])
 def pass_user(target_user_id):
     user_id = session.get("user_id")
 
@@ -641,7 +641,7 @@ def pass_user(target_user_id):
     }), 200
 
 
-@app.route("/api/matches", methods=["GET"])
+@app.route("/matches", methods=["GET"])
 def get_matches():
     user_id = session.get("user_id")
 
@@ -674,7 +674,7 @@ def get_matches():
     return jsonify(results), 200
 
 
-@app.route("/api/messages/<int:other_user_id>", methods=["GET"])
+@app.route("/messages/<int:other_user_id>", methods=["GET"])
 def get_messages(other_user_id):
     user_id = session.get("user_id")
 
@@ -707,7 +707,7 @@ def get_messages(other_user_id):
     return jsonify(results), 200
 
 
-@app.route("/api/messages/<int:other_user_id>", methods=["POST"])
+@app.route("/messages/<int:other_user_id>", methods=["POST"])
 def send_message(other_user_id):
     user_id = session.get("user_id")
 
@@ -745,12 +745,12 @@ def send_message(other_user_id):
     }), 201
 
 
-@app.route("/api/uploads/<path:filename>", methods=["GET"])
+@app.route("/uploads/<path:filename>", methods=["GET"])
 def uploaded_file(filename):
     return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
 
 
-@app.route("/api/profiles/<int:user_id>", methods=["GET"])
+@app.route("/profiles/<int:user_id>", methods=["GET"])
 def get_single_profile(user_id):
     current_user_id = session.get("user_id")
 
@@ -787,7 +787,7 @@ def get_single_profile(user_id):
     }), 200
 
 
-@app.route("/api/profile/photo", methods=["POST"])
+@app.route("/profile/photo", methods=["POST"])
 def upload_profile_photo():
     user_id = session.get("user_id")
 
@@ -825,7 +825,7 @@ def upload_profile_photo():
     }), 200
 
 
-@app.route("/api/photos", methods=["POST"])
+@app.route("/photos", methods=["POST"])
 def upload_photos():
     user_id = session.get("user_id")
 
@@ -861,7 +861,7 @@ def upload_photos():
     }), 201
 
 
-@app.route("/api/photos", methods=["GET"])
+@app.route("/photos", methods=["GET"])
 def get_my_photos():
     user_id = session.get("user_id")
 
@@ -880,7 +880,7 @@ def get_my_photos():
     ]), 200
 
 
-@app.route("/api/photos/<int:photo_id>", methods=["DELETE"])
+@app.route("/photos/<int:photo_id>", methods=["DELETE"])
 def delete_photo(photo_id):
     user_id = session.get("user_id")
 
@@ -895,7 +895,7 @@ def delete_photo(photo_id):
     return jsonify({"message": "Deleted"}), 200
 
 
-@app.route("/api/photos/<int:photo_id>/primary", methods=["PUT"])
+@app.route("/photos/<int:photo_id>/primary", methods=["PUT"])
 def set_primary(photo_id):
     user_id = session.get("user_id")
 
@@ -915,7 +915,7 @@ def set_primary(photo_id):
     return jsonify({"message": "Primary photo updated"}), 200
 
 
-@app.route("/api/favorites", methods=["POST"])
+@app.route("/favorites", methods=["POST"])
 def add_favorite():
     user_id = session.get("user_id")
 
@@ -958,7 +958,7 @@ def add_favorite():
     return jsonify({"message": "Favorite added successfully."}), 201
 
 
-@app.route("/api/favorites/<int:favorite_user_id>", methods=["DELETE"])
+@app.route("/favorites/<int:favorite_user_id>", methods=["DELETE"])
 def remove_favorite(favorite_user_id):
     user_id = session.get("user_id")
 
@@ -979,7 +979,7 @@ def remove_favorite(favorite_user_id):
     return jsonify({"message": "Favorite removed successfully."}), 200
 
 
-@app.route("/api/favorites", methods=["GET"])
+@app.route("/favorites", methods=["GET"])
 def get_favorites():
     user_id = session.get("user_id")
 
@@ -1009,7 +1009,7 @@ def get_favorites():
     return jsonify(results), 200
 
 
-@app.route("/api/notifications", methods=["GET"])
+@app.route("/notifications", methods=["GET"])
 def get_notifications():
     user_id = session.get("user_id")
 
@@ -1031,7 +1031,7 @@ def get_notifications():
     ]), 200
 
 
-@app.route("/api/notifications/<int:notification_id>/read", methods=["PUT"])
+@app.route("/notifications/<int:notification_id>/read", methods=["PUT"])
 def mark_notification_read(notification_id):
     user_id = session.get("user_id")
 
@@ -1049,31 +1049,11 @@ def mark_notification_read(notification_id):
     return jsonify({"message": "Notification marked as read."}), 200
 
 
-@app.route("/api/logout", methods=["POST"])
+@app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
     return jsonify({"message": "Logged out successfully."}), 200
 
 
-
-# --- Serve Vue.js built frontend in production ---
-dist_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dist")
-
-
-@app.route("/assets/<path:filename>")
-def serve_assets(filename):
-    return send_from_directory(os.path.join(dist_dir, "assets"), filename)
-
-
-@app.route("/")
-@app.route("/<path:path>")
-def catch_all(path=""):
-    if path != "":
-        file_path = os.path.join(dist_dir, path)
-        if os.path.isfile(file_path):
-            return send_from_directory(dist_dir, path)
-    return send_from_directory(dist_dir, "index.html")
-
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False)
+    app.run(debug=True)

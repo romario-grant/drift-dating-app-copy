@@ -1,4 +1,4 @@
-const API_BASE_URL = "/api";
+const API_BASE_URL = "http://localhost:5000";
 
 async function apiRequest(endpoint, options = {}) {
   const config = {
@@ -12,16 +12,15 @@ async function apiRequest(endpoint, options = {}) {
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
 
-  const text = await response.text();
   let data = {};
   try {
-    data = text ? JSON.parse(text) : {};
-  } catch (err) {
+    data = await response.json();
+  } catch {
     data = {};
   }
 
   if (!response.ok) {
-    throw new Error(data.error || `Server Error: ${response.status}`);
+    throw new Error(data.error || "Request failed.");
   }
 
   return data;
@@ -143,13 +142,7 @@ export async function uploadProfilePhoto(file) {
     body: formData,
   });
 
-  const text = await response.text();
-  let data = {};
-  try {
-    data = text ? JSON.parse(text) : {};
-  } catch (err) {
-    data = {};
-  }
+  const data = await response.json();
 
   if (!response.ok) {
     throw new Error(data.error || "Photo upload failed.");
@@ -177,13 +170,7 @@ export async function uploadPhotos(files) {
     body: formData,
   });
 
-  const text = await response.text();
-  let data = {};
-  try {
-    data = text ? JSON.parse(text) : {};
-  } catch (err) {
-    data = {};
-  }
+  const data = await response.json();
 
   if (!response.ok) {
     throw new Error(data.error || "Photo upload failed.");

@@ -36,6 +36,13 @@ onMounted(() => {
 
 <template>
   <main class="dashboard">
+    <aside class="sidebar">
+      <nav>
+        <RouterLink to="/dashboard">Browse</RouterLink>
+        <RouterLink to="/matches">Matches</RouterLink>
+      </nav>
+    </aside>
+
     <div class="dash">
       <h2>Your Matches</h2>
 
@@ -44,43 +51,39 @@ onMounted(() => {
       </p>
       <p v-if="loading" class="loading-text">Loading matches...</p>
 
-      <section class="matches-section">
-        <div class="matches-wrapper">
-          <div class="matches-grid">
+      <section class="section-team">
+        <div class="wrapper">
+          <div class="team">
             <div
-              class="match-card"
+              class="profile-card"
               v-for="match in matches"
               :key="match.match_id"
             >
-              <figure class="match-image-box">
+              <figure class="img-box">
                 <img src="../assets/pics/default.webp" alt="profile picture" />
               </figure>
 
-              <div class="match-content">
-                <div class="match-details">
+              <div class="info">
+                <div class="left">
                   <h3>
                     {{ formatName(match.display_name) }}
                     <span v-if="match.age">, {{ match.age }}</span>
                   </h3>
 
                   <p v-if="match.bio">{{ match.bio }}</p>
-
-                  <p v-if="match.location">
-                    {{ match.location }}
-                  </p>
+                  <p v-if="match.location">{{ match.location }}</p>
                 </div>
 
-                <div class="btns">
-                  <RouterLink :to="`/message/${match.user_id}`" class="cta">
-                    Message
-                  </RouterLink>
-                  <button class="cta reset-btn" data-cta-style="outline">Block</button>
-                  <button class="cta reset-btn" data-cta-style="line">Report</button>
-                </div>
+                <RouterLink
+                  :to="`/message/${match.user_id}`"
+                  class="reset-btn mess"
+                >
+                  Message
+                </RouterLink>
               </div>
             </div>
 
-            <p v-if="!loading && matches.length === 0" class="matches-empty">
+            <p v-if="!loading && matches.length === 0" class="empty-text">
               No matches yet.
             </p>
           </div>
@@ -90,5 +93,129 @@ onMounted(() => {
   </main>
 </template>
 
-<style scoped src="../assets/css/dashboard.css"></style>
-<style scoped src="../assets/css/matches.css"></style>
+<style scoped>
+.dashboard {
+  display: grid;
+  grid-template-columns: 0.6fr 4fr;
+  min-height: 100vh;
+}
+
+.dash {
+  padding: 2.4rem;
+}
+
+.sidebar {
+  padding: 2rem;
+  background: var(--secondary-color);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sidebar a {
+  text-decoration: none;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+h2 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.error-text {
+  color: red;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.loading-text,
+.empty-text {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.team {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 340px));
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.profile-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.2rem;
+}
+
+.img-box {
+  display: flex;
+  justify-content: center;
+  background-color: #f3f4f6;
+  border-radius: 20px;
+  width: 160px;
+  height: 160px;
+  overflow: hidden;
+}
+
+.img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.left h3,
+.left p {
+  margin: 0;
+}
+
+.mess {
+  width: max-content;
+  background-color: var(--primary-color);
+  text-decoration: none;
+}
+
+@media (max-width: 900px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .sidebar nav {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+</style>

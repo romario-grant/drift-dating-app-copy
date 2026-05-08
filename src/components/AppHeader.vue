@@ -1,25 +1,15 @@
 <template>
-  <header class="main-header" id="nav-bar" v-if="!$route.meta.hideBar">
+  <header class="main-header" id="nav-bar">
     <div class="wrapper" data-width="wide">
-      <RouterLink
-        to="/"
-        class="logo"
-        id="logo-box"
-        v-if="!$route.meta.hideAuthButtons"
-      >
+      <RouterLink to="/" class="logo" id="logo-box">
         <img src="@/assets/icons/m-logo.svg" alt="logo" />
       </RouterLink>
 
-      <RouterLink
-        to="/dashboard"
-        class="logo"
-        id="logo-box"
-        v-if="$route.meta.hideLogo"
+      <nav
+        class="main-navigation"
+        id="nav-container"
+        :class="{ active: menuOpen }"
       >
-        <img src="@/assets/icons/m-logo.svg" alt="logo" />
-      </RouterLink>
-
-      <nav class="main-navigation" :class="{ active: menuOpen }">
         <ul class="nav-list left" v-if="!$route.meta.hideAuthButtons">
           <li>
             <RouterLink to="/about" class="nav-link">About</RouterLink>
@@ -29,41 +19,47 @@
         <ul class="nav-list right" v-if="!$route.meta.hideAuthButtons">
           <li>
             <RouterLink to="/login" class="nav-link log" data-cta-style="line">
-              Log in
+              Log In
             </RouterLink>
           </li>
           <li>
             <RouterLink to="/signup" class="nav-link sign">
-              Sign up
+              Sign Up
             </RouterLink>
           </li>
         </ul>
       </nav>
 
       <button
-        class="mobile-navigation"
-        :class="{ active: menuOpen }"
         @click="toggleMenu"
+        class="mobile-navigation"
+        id="menu-container"
+        type="button"
       >
         <div class="bar"></div>
         <div class="bar"></div>
         <div class="bar"></div>
       </button>
+
+      <div
+        class="black"
+        id="black-box"
+        @click="toggleMenu"
+        v-if="menuOpen"
+      ></div>
     </div>
   </header>
-  <div class="black" :class="{ active: menuOpen }" @click="closeMenu"></div>
 </template>
 
 <script setup>
 import { ref } from "vue";
+import { RouterLink } from "vue-router";
 
 const menuOpen = ref(false);
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
 };
-
-const closeMenu = () => {
-  menuOpen.value = false;
-};
 </script>
+
+<style src="../assets/css/nav.css"></style>

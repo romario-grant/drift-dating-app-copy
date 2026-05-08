@@ -1,16 +1,12 @@
 <template>
-  <footer id="footer" v-if="!$route.meta.hideBar">
+  <footer id="footer">
     <div class="footer-cnt">
       <div class="top">
         <div class="wrapper top-cnt">
           <div class="company-info">
-            <RouterLink to="/" v-if="!$route.meta.hideAuthButtons">
-              <img src="@/assets/icons/w-logo.svg" alt="logo" />
-            </RouterLink>
-
-            <RouterLink to="/dashboard" v-if="$route.meta.hideLogo">
-              <img src="@/assets/icons/w-logo.svg" alt="logo" />
-            </RouterLink>
+            <a href="index.html"
+              ><img src="@/assets/icons/m-logo.svg" alt="logo"
+            /></a>
             <p>
               Help people connect without pressure, without pretending, and
               without the noise.
@@ -31,3 +27,5 @@ import { ref } from "vue";
 
 const year = new Date().getFullYear();
 </script>
+
+<style src="../assets/css/footer.css"></style>
